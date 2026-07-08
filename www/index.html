@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bob 💙 - Compañero Emocional</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #4A90E2;
+    --blue-dark: #2c6db5;
+    --blue-light: #e8f2ff;
+    --yellow: #FFD54F;
+    --bg: #f0f6ff;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #8eacc8;
+    --border: #d4e6f9;
+    --radius: 20px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex-direction: column; height: 100dvh; }
+  .screen.active { display: flex; }
+
+  /* ── AUTH SCREEN ── */
+  #auth-screen {
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 28px 32px;
+    background: var(--bg);
+  }
+
+  .auth-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding-top: 20px;
+  }
+
+  .auth-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--blue);
+    text-align: center;
+  }
+
+  .auth-subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .auth-form {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border-radius: 28px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 30px rgba(74,144,226,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .auth-form-title {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 12px; }
+
+  .input {
+    width: 100%;
+    background: var(--blue-light);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input:focus { border-color: var(--blue); }
+  .input::placeholder { color: var(--muted); }
+
+  .error-msg {
+    color: #ef4444;
+    font-size: 13px;
+    text-align: center;
+    min-height: 18px;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(74,144,226,0.35);
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.2px;
+  }
+
+  .btn-primary:hover { opacity: 0.92; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .switch-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .switch-btn span { color: var(--blue); font-weight: 600; }
+
+  /* ── HOME SCREEN ── */
+  #home-screen {
+    align-items: center;
+    justify-content: center;
+    padding: 24px 32px;
+    gap: 0;
+    position: relative;
+  }
+
+  .home-header {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+  }
+
+  .btn-logout {
+    background: var(--blue-light);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-logout:hover { background: var(--border); }
+
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    animation: fadeSlide 0.7s ease both;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .avatar-wrapper {
+    margin-bottom: 28px;
+    filter: drop-shadow(0 12px 24px rgba(74,144,226,0.25));
+  }
+
+  .greeting {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--blue);
+    text-align: center;
+    letter-spacing: -0.5px;
+  }
+
+  .home-subtitle {
+    font-size: 17px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.55;
+    margin-top: 10px;
+    margin-bottom: 28px;
+  }
+
+  .dots-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0.3;
+  }
+
+  .btn-chat {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 32px;
+    padding: 18px 44px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(74,144,226,0.38);
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+  }
+
+  .btn-chat:hover { opacity: 0.92; }
+  .btn-chat:active { transform: scale(0.97); }
+
+  .tagline {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  /* ── CHAT SCREEN ── */
+  #chat-screen { background: var(--bg); }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 12px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(74,144,226,0.07);
+    flex-shrink: 0;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: var(--blue);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+
+  .back-btn:hover { background: var(--blue-light); }
+
+  .header-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .header-status {
+    font-size: 12px;
+    color: #4CAF50;
+    font-weight: 500;
+  }
+
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scroll-behavior: smooth;
+  }
+
+  .messages-container::-webkit-scrollbar { width: 4px; }
+  .messages-container::-webkit-scrollbar-track { background: transparent; }
+  .messages-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    animation: msgIn 0.3s ease both;
+  }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-row.user { justify-content: flex-end; }
+  .msg-row.bob  { justify-content: flex-start; }
+
+  .bubble {
+    max-width: 75%;
+    border-radius: 20px;
+    padding: 12px 16px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .bubble.user {
+    background: var(--blue);
+    color: white;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 10px rgba(74,144,226,0.22);
+  }
+
+  .bubble.bob {
+    background: var(--white);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+
+  .bob-mini { margin-bottom: 2px; flex-shrink: 0; }
+
+  /* Typing indicator */
+  .typing-bubble {
+    background: var(--white);
+    border-radius: 20px;
+    border-bottom-left-radius: 4px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+
+  .typing-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: typingBounce 1.2s infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 16px;
+    padding-bottom: 60px;
+    opacity: 0.8;
+  }
+
+  .empty-state p {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Input bar */
+  .input-bar {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 10px 16px 20px;
+    flex-shrink: 0;
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--blue-light);
+    border-radius: 28px;
+    padding: 8px 8px 8px 18px;
+  }
+
+  #chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    max-height: 100px;
+    line-height: 1.5;
+    font-family: inherit;
+    padding: 4px 0;
+  }
+
+  #chat-input::placeholder { color: var(--muted); }
+
+  .send-btn {
+    background: var(--blue);
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(74,144,226,0.4);
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .send-btn:hover { opacity: 0.88; }
+  .send-btn:active { transform: scale(0.93); }
+  .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .send-btn svg { display: block; }
+
+  /* ── AVATAR ANIMATION ── */
+  .avatar-anim {
+    animation: breathe 3s ease-in-out infinite, float 4s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scaleX(1) scaleY(1); }
+    50%       { transform: scaleX(1.04) scaleY(1.04); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+  }
+
+  .avatar-anim { animation: breathe 3s ease-in-out infinite, float 4s ease-in-out infinite; }
+
+  .avatar-bounce {
+    animation: bounce 0.4s ease both !important;
+  }
+
+  @keyframes bounce {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(0.91); }
+    60%  { transform: scale(1.06); }
+    80%  { transform: scale(0.98); }
+    100% { transform: scale(1); }
+  }
+
+  /* shake for auth errors */
+  .shake { animation: shake 0.4s ease; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-8px); }
+    40%       { transform: translateX(8px); }
+    60%       { transform: translateX(-6px); }
+    80%       { transform: translateX(6px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════ -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-top">
+    <div class="avatar-wrapper">
+      <div class="avatar-anim" id="auth-avatar">
+        <!-- BOB SVG -->
+        <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Legs -->
+          <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Body -->
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Body-leg cover -->
+          <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+          <!-- Left arm -->
+          <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Right arm -->
+          <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Body front (re-draw over arm join) -->
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Head -->
+          <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <!-- Head-body join cover -->
+          <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+          <!-- Antenna stalk -->
+          <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+          <!-- Yellow ball -->
+          <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+          <circle cx="57" cy="5.5" r="2.5" fill="rgba(255,255,255,0.55)"/>
+          <!-- Left eye -->
+          <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="51" cy="45.5" r="1.4" fill="white"/>
+          <!-- Right eye -->
+          <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="73" cy="45.5" r="1.4" fill="white"/>
+          <!-- Eyebrow left -->
+          <path d="M 42 39 Q 49 35 56 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <!-- Eyebrow right -->
+          <path d="M 64 39 Q 71 35 78 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <!-- Smile -->
+          <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="auth-title" id="auth-title">Bienvenido de vuelta</div>
+    <div class="auth-subtitle" id="auth-subtitle">Tu compañero emocional te está esperando</div>
+  </div>
+
+  <div class="auth-form" id="auth-form">
+    <div class="auth-form-title" id="form-title">Iniciar sesión</div>
+    <div class="field-group">
+      <input class="input" id="email-input" type="email" placeholder="Correo electrónico" autocomplete="email"/>
+      <input class="input" id="password-input" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+    </div>
+    <div class="error-msg" id="auth-error"></div>
+    <button class="btn-primary" id="auth-btn">Entrar</button>
+    <button class="switch-btn" id="switch-btn">
+      ¿No tienes cuenta? <span id="switch-label">Regístrate</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     HOME SCREEN
+══════════════════════════════════════ -->
+<div id="home-screen" class="screen">
+  <div class="home-header">
+    <button class="btn-logout" id="logout-btn">Salir</button>
+  </div>
+
+  <div class="home-content">
+    <div class="avatar-wrapper">
+      <div class="avatar-anim" id="home-avatar">
+        <svg width="200" height="230" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+          <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+          <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+          <circle cx="57" cy="5.5" r="2.5" fill="rgba(255,255,255,0.55)"/>
+          <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="51" cy="45.5" r="1.4" fill="white"/>
+          <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="73" cy="45.5" r="1.4" fill="white"/>
+          <path d="M 42 39 Q 49 35 56 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M 64 39 Q 71 35 78 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="greeting">Hola, soy Bob 💙</div>
+    <div class="home-subtitle">Tu compañero emocional.<br>¿Cómo te sientes hoy?</div>
+
+    <div class="dots-row">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <button class="btn-chat" id="go-chat-btn">Hablar con Bob</button>
+    <div class="tagline">Siempre aquí para escucharte, sin juzgarte</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAT SCREEN
+══════════════════════════════════════ -->
+<div id="chat-screen" class="screen">
+  <div class="chat-header">
+    <button class="back-btn" id="back-btn">‹</button>
+    <div class="header-center">
+      <div class="bob-mini">
+        <svg width="40" height="46" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+          <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+          <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+          <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+          <circle cx="57" cy="5.5" r="2.5" fill="rgba(255,255,255,0.55)"/>
+          <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="51" cy="45.5" r="1.4" fill="white"/>
+          <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+          <circle cx="73" cy="45.5" r="1.4" fill="white"/>
+          <path d="M 42 39 Q 49 35 56 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M 64 39 Q 71 35 78 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="header-name">Bob</div>
+        <div class="header-status" id="header-status">En línea</div>
+      </div>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="messages-container" id="messages-container">
+    <div class="empty-state" id="empty-state">
+      <svg width="70" height="82" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.5">
+        <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+        <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+        <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+        <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+        <circle cx="57" cy="5.5" r="2.5" fill="rgba(255,255,255,0.55)"/>
+        <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+        <circle cx="51" cy="45.5" r="1.4" fill="white"/>
+        <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+        <circle cx="73" cy="45.5" r="1.4" fill="white"/>
+        <path d="M 42 39 Q 49 35 56 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <path d="M 64 39 Q 71 35 78 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <p>Cuéntame cómo te sientes hoy</p>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-wrapper">
+      <textarea id="chat-input" placeholder="Cuéntame algo..." rows="1"></textarea>
+      <button class="send-btn" id="send-btn" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M22 2L11 13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── Firebase config ──────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDYPsXIIRymo9DVHNjYzOUk6c-vmkUhVTc",
+  authDomain: "bob-60a43.firebaseapp.com",
+  projectId: "bob-60a43",
+  storageBucket: "bob-60a43.firebasestorage.app",
+  messagingSenderId: "1097053545173",
+  appId: "1:1097053545173:web:1cafee598ef676b98d785c",
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ── Gemini ───────────────────────────────────────────────
+const GEMINI_KEY = "AIzaSyAw_zoRjMqQ3VhYQYOWvwcjWjCuDmgO3yo";
+const SYSTEM_PROMPT = `Eres Bob, un compañero emocional inteligente y empático. Antes de cada respuesta, analizas internamente:
+1. EMOCIÓN: ¿Qué emoción principal expresa el usuario? ¿Con qué intensidad?
+2. CONTEXTO: ¿Hay un patrón en la conversación? ¿Qué no dice pero se intuye?
+3. NECESIDAD REAL: ¿Qué necesita ahora? (ser escuchado, validación, consejo, compañía, reflexión...)
+4. RESPUESTA: Con todo eso, responde de forma cálida, personal y genuina.
+Reglas: NUNCA uses frases genéricas. SIEMPRE menciona algo específico. Haz UNA pregunta abierta si tiene sentido. Máximo 3-4 oraciones. Responde en el mismo idioma del usuario. NUNCA juzgues.`;
+
+async function askGemini(history) {
+  const contents = [
+    { role: "user",  parts: [{ text: SYSTEM_PROMPT }] },
+    { role: "model", parts: [{ text: "Entendido. Analizaré cada mensaje con atención real antes de responder." }] },
+    ...history.slice(-20).map(m => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.text }],
+    })),
+  ];
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`Gemini ${res.status}`);
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text
+    ?? "Estoy aquí contigo. ¿Quieres contarme más?";
+}
+
+// ── State ────────────────────────────────────────────────
+let currentUser   = null;
+let isLogin       = true;
+let messages      = [];
+let firestoreUnsub = null;
+let isSending     = false;
+
+// ── DOM refs ─────────────────────────────────────────────
+const screens       = { auth: document.getElementById("auth-screen"), home: document.getElementById("home-screen"), chat: document.getElementById("chat-screen") };
+const authTitle     = document.getElementById("auth-title");
+const authSubtitle  = document.getElementById("auth-subtitle");
+const formTitle     = document.getElementById("form-title");
+const emailInput    = document.getElementById("email-input");
+const passwordInput = document.getElementById("password-input");
+const authError     = document.getElementById("auth-error");
+const authBtn       = document.getElementById("auth-btn");
+const switchBtn     = document.getElementById("switch-btn");
+const switchLabel   = document.getElementById("switch-label");
+const logoutBtn     = document.getElementById("logout-btn");
+const goChatBtn     = document.getElementById("go-chat-btn");
+const backBtn       = document.getElementById("back-btn");
+const headerStatus  = document.getElementById("header-status");
+const msgContainer  = document.getElementById("messages-container");
+const emptyState    = document.getElementById("empty-state");
+const chatInput     = document.getElementById("chat-input");
+const sendBtn       = document.getElementById("send-btn");
+
+// ── Navigation ───────────────────────────────────────────
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
+}
+
+// ── Auth state ───────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if (user) {
+    showScreen("home");
+    subscribeMessages();
+  } else {
+    showScreen("auth");
+    if (firestoreUnsub) { firestoreUnsub(); firestoreUnsub = null; }
+    messages = [];
+  }
+});
+
+// ── Auth actions ─────────────────────────────────────────
+authBtn.addEventListener("click", handleAuth);
+passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") handleAuth(); });
+
+async function handleAuth() {
+  const email = emailInput.value.trim();
+  const pass  = passwordInput.value;
+  if (!email || !pass) {
+    showError("Por favor completa todos los campos");
+    return;
+  }
+  authBtn.disabled = true;
+  authBtn.textContent = "...";
+  authError.textContent = "";
+  try {
+    if (isLogin) {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } else {
+      await createUserWithEmailAndPassword(auth, email, pass);
+    }
+  } catch (e) {
+    const code = e.code || "";
+    if (code.includes("user-not-found") || code.includes("wrong-password") || code.includes("invalid-credential")) {
+      showError("Correo o contraseña incorrectos");
+    } else if (code.includes("email-already-in-use")) {
+      showError("Este correo ya está registrado");
+    } else if (code.includes("weak-password")) {
+      showError("La contraseña debe tener al menos 6 caracteres");
+    } else {
+      showError("Algo salió mal. Intenta de nuevo");
+    }
+  } finally {
+    authBtn.disabled = false;
+    authBtn.textContent = isLogin ? "Entrar" : "Crear cuenta";
+  }
+}
+
+function showError(msg) {
+  authError.textContent = msg;
+  document.getElementById("auth-form").classList.add("shake");
+  setTimeout(() => document.getElementById("auth-form").classList.remove("shake"), 450);
+}
+
+switchBtn.addEventListener("click", () => {
+  isLogin = !isLogin;
+  formTitle.textContent       = isLogin ? "Iniciar sesión" : "Crear cuenta";
+  authBtn.textContent         = isLogin ? "Entrar" : "Crear cuenta";
+  switchLabel.textContent     = isLogin ? "Regístrate" : "Inicia sesión";
+  switchBtn.childNodes[0].textContent = isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? ";
+  authTitle.textContent       = isLogin ? "Bienvenido de vuelta" : "Conoce a Bob";
+  authSubtitle.textContent    = isLogin
+    ? "Tu compañero emocional te está esperando"
+    : "Un espacio seguro para compartir cómo te sientes";
+  authError.textContent = "";
+});
+
+logoutBtn.addEventListener("click", () => signOut(auth));
+
+// ── Navigation ───────────────────────────────────────────
+goChatBtn.addEventListener("click", () => showScreen("chat"));
+backBtn.addEventListener("click", () => showScreen("home"));
+
+// ── Firestore messages ───────────────────────────────────
+function subscribeMessages() {
+  if (!currentUser) return;
+  const q = query(
+    collection(db, "users", currentUser.uid, "messages"),
+    orderBy("timestamp", "asc")
+  );
+  firestoreUnsub = onSnapshot(q, snap => {
+    messages = snap.docs.map(d => ({
+      id: d.id,
+      text: d.data().text,
+      role: d.data().role,
+    }));
+    renderMessages();
+  });
+}
+
+// ── Render messages ──────────────────────────────────────
+function renderMessages() {
+  // Remove all message rows (keep empty state)
+  msgContainer.querySelectorAll(".msg-row, .typing-row").forEach(el => el.remove());
+
+  if (messages.length === 0) {
+    emptyState.style.display = "flex";
+    return;
+  }
+  emptyState.style.display = "none";
+
+  messages.forEach(m => {
+    msgContainer.appendChild(createBubble(m.role, m.text));
+  });
+
+  msgContainer.scrollTop = msgContainer.scrollHeight;
+}
+
+function createBubble(role, text) {
+  const row = document.createElement("div");
+  row.className = `msg-row ${role}`;
+
+  if (role === "bob") {
+    const mini = document.createElement("div");
+    mini.className = "bob-mini";
+    mini.innerHTML = `<svg width="32" height="37" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+      <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+      <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+      <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+      <circle cx="57" cy="5.5" r="2.5" fill="rgba(255,255,255,0.55)"/>
+      <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+      <circle cx="51" cy="45.5" r="1.4" fill="white"/>
+      <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+      <circle cx="73" cy="45.5" r="1.4" fill="white"/>
+      <path d="M 42 39 Q 49 35 56 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M 64 39 Q 71 35 78 39" stroke="#1a2e44" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+    </svg>`;
+    row.appendChild(mini);
+  }
+
+  const bubble = document.createElement("div");
+  bubble.className = `bubble ${role}`;
+  bubble.textContent = text;
+  row.appendChild(bubble);
+  return row;
+}
+
+function showTyping() {
+  const row = document.createElement("div");
+  row.className = "msg-row bob typing-row";
+  row.innerHTML = `
+    <div class="bob-mini">
+      <svg width="32" height="37" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="44" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="76" cy="118" rx="12" ry="16" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="102" rx="27" ry="16" fill="#4A90E2"/>
+        <ellipse cx="22" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="98" cy="82" rx="11" ry="19" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="88" rx="30" ry="26" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <circle cx="60" cy="50" r="30" fill="#4A90E2" stroke="#2a6095" stroke-width="3.2"/>
+        <ellipse cx="60" cy="70" rx="22" ry="14" fill="#4A90E2"/>
+        <line x1="60" y1="21" x2="60" y2="11" stroke="#2a6095" stroke-width="2.8" stroke-linecap="round"/>
+        <circle cx="60" cy="8" r="9" fill="#FFD54F" stroke="#c9a800" stroke-width="2"/>
+        <ellipse cx="49" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+        <ellipse cx="71" cy="48" rx="5.5" ry="6.5" fill="#1a2e44"/>
+        <path d="M 48 60 Q 60 72 72 60" stroke="#1a2e44" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="typing-bubble">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  msgContainer.appendChild(row);
+  msgContainer.scrollTop = msgContainer.scrollHeight;
+  return row;
+}
+
+// ── Send message ─────────────────────────────────────────
+chatInput.addEventListener("input", () => {
+  sendBtn.disabled = !chatInput.value.trim();
+  chatInput.style.height = "auto";
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + "px";
+});
+
+chatInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    if (!sendBtn.disabled) handleSend();
+  }
+});
+
+sendBtn.addEventListener("click", handleSend);
+
+async function handleSend() {
+  const text = chatInput.value.trim();
+  if (!text || isSending || !currentUser) return;
+
+  isSending = true;
+  sendBtn.disabled = true;
+  chatInput.value = "";
+  chatInput.style.height = "auto";
+
+  // Save user message
+  await addDoc(collection(db, "users", currentUser.uid, "messages"), {
+    text,
+    role: "user",
+    timestamp: serverTimestamp(),
+  });
+
+  // Snapshot of history for context (before Firestore updates)
+  const historyForAI = [...messages, { role: "user", text }];
+
+  // Show typing indicator
+  headerStatus.textContent = "Escribiendo...";
+  const typingRow = showTyping();
+
+  try {
+    const reply = await askGemini(historyForAI);
+
+    typingRow.remove();
+
+    // Bounce animation on chat header avatar
+    const chatHeaderAvatar = document.querySelector(".bob-mini svg");
+    if (chatHeaderAvatar) {
+      chatHeaderAvatar.parentElement.classList.add("avatar-bounce");
+      setTimeout(() => chatHeaderAvatar.parentElement.classList.remove("avatar-bounce"), 450);
+    }
+
+    await addDoc(collection(db, "users", currentUser.uid, "messages"), {
+      text: reply,
+      role: "bob",
+      timestamp: serverTimestamp(),
+    });
+  } catch (err) {
+    typingRow.remove();
+    console.error("Bob error:", err);
+    await addDoc(collection(db, "users", currentUser.uid, "messages"), {
+      text: "Algo falló de mi lado. ¿Puedes intentarlo de nuevo?",
+      role: "bob",
+      timestamp: serverTimestamp(),
+    });
+  } finally {
+    isSending = false;
+    headerStatus.textContent = "En línea";
+  }
+}
+</script>
+</body>
+</html>
